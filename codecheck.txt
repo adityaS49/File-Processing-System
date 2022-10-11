@@ -1,0 +1,379 @@
+#include <stdio.h>
+#include <conio.h>
+#include <stdlib.h>
+#include <string.h>
+void find_word()
+{
+
+    char word[50];
+    char ch;
+    char *filename = "somefile.txt";
+    char search[100];
+
+    int count = 0;
+    int pos[1000];
+    int pointer = 0;
+    int loop;
+    FILE *fp = NULL;
+    /*  open for writing */
+    fp = fopen(filename, "r");
+    printf("Enter the word : ");
+    scanf("%s", search);
+
+    do
+    {
+        ch = fscanf(fp, "%s", word);
+        if (strcmp(word, search) == 0)
+        {
+            pos[count] = pointer;
+            count++;
+        }
+        pointer++;
+        // printf("%s",word);
+    } while (ch != EOF);
+
+    if (count == 0)
+    {
+
+        printf("'%s' not found in %s\n", search, filename);
+    }
+
+    else
+    {
+        printf("'%s' is found at -> ", search);
+        for (loop = 0; loop < count; loop++)
+        {
+            printf("%d ", pos[loop]);
+        }
+        printf("positions.\n");
+    }
+
+    fclose(fp);
+    getch();
+}
+void count_words()
+{
+    int c;
+    printf("\n------------------------------------\n");
+    printf("      ***OPERATION***\n");
+    printf("--------------------------------------\n");
+    printf("1.Count Number of Words \n2.Count Number of Lines \n");
+    printf("Enter your choice : ");
+    scanf("%d", &c);
+    FILE *ifp, *ofp;
+    char word[100], read[100], replace[100];
+    int word_len, i, p = 0;
+    ifp = fopen("somefile.txt", "r");
+    ofp = fopen("file_replace_output.txt", "w+");
+    char chr;
+    int count = 0;
+    if (c == 1)
+    {
+        while ((chr = fgetc(ifp)) != EOF)
+        {
+            // Counts each word
+            if (chr == ' ' || chr == '\n')
+                count++;
+        }
+
+        printf("Number of words present in given file: %d", count);
+        fclose(ifp);
+        fclose(ofp);
+        getch();
+    }
+    else if (c == 2)
+    {
+        for (chr = getc(ifp); chr != EOF; chr = getc(ifp))
+            if (chr == '\n') // Increment count if this character is newline
+                count = count + 1;
+
+        // Close the file
+        fclose(ifp);
+        printf("\nNumber of lines present in given file: %d ", count + 1);
+    }
+    else
+    {
+        printf("Wrong Choice!!");
+        fclose(ifp);
+        fclose(ofp);
+    }
+
+    getch();
+    system("cls");
+}
+
+void findAndReplaceInFile()
+{
+    FILE *ifp, *ofp;
+    char word[100], ch, read[100], replace[100];
+    int word_len, i, p = 0;
+
+    ifp = fopen("somefile.txt", "r");
+    ofp = fopen("file_replace_output.txt", "w+");
+    if (ifp == NULL || ofp == NULL)
+    {
+        printf("Can't open file.");
+        exit(0);
+    }
+    puts("THE CONTENTS OF THE FILE ARE SHOWN BELOW :\n");
+
+    while (1)
+    {
+        ch = fgetc(ifp);
+        if (ch == EOF)
+        {
+            break;
+        }
+        printf("%c", ch);
+    }
+
+    printf("\n\nEnter the word : ");
+    scanf("%s", word);
+
+    printf("Enter the word to replace it with : ");
+    scanf("%s", replace);
+
+    fprintf(ofp, "%s - %s\n", word, replace);
+
+    // comparing word with file
+    rewind(ifp);
+    while (!feof(ifp))
+    {
+
+        fscanf(ifp, "%s", read);
+
+        if (strcmp(read, word) == 0)
+        {
+
+            // for deleting the word
+            strcpy(read, replace);
+        }
+
+        // In last loop it runs twice
+        fprintf(ofp, "%s ", read);
+    }
+
+    // Printing the content of the Output file
+    rewind(ofp);
+    while (1)
+    {
+        ch = fgetc(ofp);
+        if (ch == EOF)
+        {
+            break;
+        }
+        printf("%c", ch);
+    }
+
+    fclose(ifp);
+    fclose(ofp);
+    getch();
+}
+
+void change_Case()
+{
+    int c;
+    printf("\n------------------------------------\n");
+    printf("      ***OPERATION***\n");
+    printf("--------------------------------------\n");
+    printf("1. Perform Uppercase \n2. Perform Lowercase\n");
+    printf("Enter your choice : ");
+    scanf("%d", &c);
+    FILE *ifp, *ofp;
+    char word[100], ch, read[100], replace[100];
+    int word_len, i, p = 0;
+    ifp = fopen("somefile.txt", "r");
+    ofp = fopen("file_replace_output.txt", "w+");
+    if (c == 1)
+    {
+
+        if (ifp == NULL || ofp == NULL)
+        {
+            printf("Can't open file.");
+            exit(0);
+        }
+        puts("THE CONTENTS OF THE FILE ARE SHOWN BELOW :\n");
+
+        // displaying file contents
+        while (1)
+        {
+            ch = fgetc(ifp);
+            if (ch == EOF)
+            {
+                break;
+            }
+            printf("%c", ch);
+        }
+
+        printf("\nEnter the Lowercase Word :- ");
+        scanf("%s", word);
+
+        // comparing word with file
+        rewind(ifp);
+        while (!feof(ifp))
+        {
+
+            fscanf(ifp, "%s", read);
+
+            if (strcmp(read, word) == 0)
+            {
+
+                strupr(word);
+                strcpy(read, word);
+            }
+
+            // In last loop it runs twice
+            fprintf(ofp, "%s ", read);
+        }
+
+        // Printing the content of the Output file
+        rewind(ofp);
+        while (1)
+        {
+            ch = fgetc(ofp);
+            if (ch == EOF)
+            {
+                break;
+            }
+            printf("%c", ch);
+        }
+    }
+    else if (c == 2)
+    {
+        if (ifp == NULL || ofp == NULL)
+        {
+            printf("Can't open file.");
+            exit(0);
+        }
+        puts("THE CONTENTS OF THE FILE ARE SHOWN BELOW :\n");
+
+        // displaying file contents
+        while (1)
+        {
+            ch = fgetc(ifp);
+            if (ch == EOF)
+            {
+                break;
+            }
+            printf("%c", ch);
+        }
+
+        printf("\nEnter the Uppercase Word :- ");
+        scanf("%s", word);
+
+        // comparing word with file
+        rewind(ifp);
+        while (!feof(ifp))
+        {
+
+            fscanf(ifp, "%s", read);
+
+            if (strcmp(read, word) == 0)
+            {
+
+                strlwr(word);
+                strcpy(read, word);
+            }
+
+            // In last loop it runs twice
+            fprintf(ofp, "%s ", read);
+        }
+
+        // Printing the content of the Output file
+        rewind(ofp);
+        while (1)
+        {
+            ch = fgetc(ofp);
+            if (ch == EOF)
+            {
+                break;
+            }
+            printf("%c", ch);
+        }
+    }
+    else
+    {
+        printf("Wrong Choice!!");
+    }
+    fclose(ifp);
+    fclose(ofp);
+    getch();
+    system("cls");
+}
+void copy_File()
+
+{
+    char ch; // source_file[20], target_file[20];
+    FILE *source, *target;
+
+    printf("******DISCALIMER******");
+    printf("\nEnter the existing file-name :- ");
+    char source_file[50];
+    scanf("%s", source_file);
+    printf("\nEnter the name of the file to be created :- ");
+    char target_file[50];
+    scanf("%s", target_file);
+    source = fopen(source_file, "r");
+    if (source == NULL)
+    {
+        printf("Press any key to exit...\n");
+        exit(EXIT_FAILURE);
+    }
+    target = fopen(target_file, "w");
+    if (target == NULL)
+    {
+        fclose(source);
+        printf("Press any key to exit...\n");
+        exit(EXIT_FAILURE);
+    }
+    while ((ch = fgetc(source)) != EOF)
+        fputc(ch, target);
+    printf("File copied successfully.\n");
+    fclose(source);
+    fclose(target);
+    getch();
+}
+
+int main()
+{
+
+    int operation = 1;
+
+    while (operation)
+    {
+        printf("\n1 : Find position(s) of the word\n");
+        printf("2 : Count total number of Words/Lines\n");
+        printf("3 : Find and replace the word\n");
+        printf("4 : Perform Uppercase/Lowercase\n");
+        printf("5 : Copy the file\n");
+        printf("\nChoose Operation : ");
+        scanf("%d", &operation);
+
+        switch (operation)
+        {
+        case 1:
+            find_word();
+            break;
+        case 2:
+            count_words();
+            break;
+        case 3:
+            findAndReplaceInFile();
+            break;
+        case 4:
+            change_Case();
+            break;
+        case 5:
+            copy_File();
+            break;
+        default:
+            system("cls");
+            printf("\nInvalid Operation !!");
+            printf("\nEnter 1,2,3,4 and 5 only");
+            printf("\nEnter any key to continue");
+            getch();
+            system("cls");
+        }
+    }
+    return 0;
+}
